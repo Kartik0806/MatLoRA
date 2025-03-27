@@ -1,15 +1,11 @@
-export MODEL_PATH='path/to/llama-2'
-export SAVE_PATH='path/to/save'
-export MASTER_ADDR="localhost"
-export MASTER_PORT="1231"
-export GLOO_SOCKET_IFNAME="lo"
-export NCCL_SOCKET_IFNAME="lo"
+export MODEL_PATH='meta-llama/Llama-3.2-1B'
+export SAVE_PATH='.weights/'
 export WANDB_DISABLED=true
 wandb offline
 
 wget https://huggingface.co/datasets/meta-math/MetaMathQA/resolve/main/MetaMathQA-395K.json -O ./data/MetaMathQA-395K.json
 
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python3 -m torch.distributed.launch --master_addr ${MASTER_ADDR} --master_port ${MASTER_PORT} --nproc_per_node=8 --use_env train_math.py \
+python3  train_math.py \
     --model_name_or_path $MODEL_PATH \
     --data_path "./data/MetaMathQA-395K.json" \
     --data_length 10000000 \
