@@ -26,6 +26,9 @@ from transformers import Trainer
 import argparse
 import json
 import random;random.seed(42)
+import argparse
+
+from lora_model import get_matlora, get_lora
 
 def _make_r_io_base(f, mode: str):
     if not isinstance(f, io.IOBase):
@@ -60,7 +63,6 @@ PROMPT_DICT = {
 @dataclass
 class ModelArguments:
     model_name_or_path: Optional[str] = field(default="facebook/opt-125m")
-
 
 @dataclass
 class DataArguments:
@@ -250,7 +252,7 @@ def train():
     parser = transformers.HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args, remaining_args = parser.parse_args_into_dataclasses(return_remaining_strings=True)
     data_args.data_length = int(remaining_args[1])
-
+    is_matlora = remaining_args[-1]
     model = transformers.AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
@@ -263,12 +265,6 @@ def train():
         padding_side="right",
         use_fast=False,
     )
-    if tokenizer.pad_token is None:
-        smart_tokenizer_and_embedding_resize(
-            special_tokens_dict=dict(pad_token=DEFAULT_PAD_TOKEN),
-            tokenizer=tokenizer,
-            model=model,
-        )
     if "llama" in model_args.model_name_or_path:
         tokenizer.add_special_tokens(
             {
@@ -277,12 +273,25 @@ def train():
                 "unk_token": DEFAULT_UNK_TOKEN,
             }
         )
+    if tokenizer.pad_token is None:
+        smart_tokenizer_and_embedding_resize(
+            special_tokens_dict=dict(pad_token=DEFAULT_PAD_TOKEN),
+            tokenizer=tokenizer,
+            model=model,
+        )
+
+    if(is_matlora == 'True'):
+        print("MatLoRA")
+        model = get_matlora(model, ranks = [64, 32, 16, 8])
+    else:
+        print("LoRA")
+        model = get_lora(model)
 
     data_module = make_supervised_data_module(tokenizer=tokenizer, data_args=data_args)
+
     trainer = Trainer(model=model, tokenizer=tokenizer, args=training_args, **data_module)
     trainer.train()
     trainer.save_state()
-    # if os.environ.get('LOCAL_RANK') == '0':
     safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
 
 
