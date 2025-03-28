@@ -63,11 +63,10 @@ def replace_linear_layers(module, custom_linear_cls, ranks):
         
         if isinstance(child, nn.Linear):
             # print(name,child)
-            if name in ["value", "query"]:
+            if "head" not in name:
                 new_layer = LoRA(child, child.in_features, child.out_features, ranks)
                 setattr(module, name, new_layer)
         else:
-        
             replace_linear_layers(child, custom_linear_cls, ranks)
 
 def get_matlora(model, ranks):

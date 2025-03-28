@@ -27,5 +27,5 @@ python3  train_math.py \
     --tf32 True \
     --is_metalora True
 
-python eval_gsm8k.py --model $SAVE_PATH --data_path ./data/test/GSM8K_test.jsonl
-python eval_math.py --model $SAVE_PATH --data_path ./data/test/MATH_test.jsonl
+python eval_gsm8k.py --model $SAVE_PATH --data_file ./data/test/GSM8K_test.jsonl
+python eval_math.py --model $SAVE_PATH --data_file ./data/test/MATH_test.jsonl
