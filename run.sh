@@ -1,5 +1,6 @@
 export MODEL_PATH='meta-llama/Llama-3.1-8B'
 export SAVE_PATH='.weights/'
+export WANDB_PROJECT='MetaMathQA' 
 export WANDB_DISABLED=false
 wandb online
 
