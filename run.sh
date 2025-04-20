@@ -8,7 +8,7 @@ wget https://huggingface.co/datasets/meta-math/MetaMathQA/resolve/main/MetaMathQ
 python3  train_math.py \
     --model_name_or_path $MODEL_PATH \
     --data_path "./data/MetaMathQA-395K.json" \
-    --data_length 10000000 \
+    --data_length 100000 \
     --bf16 True \
     --output_dir $SAVE_PATH \
     --num_train_epochs 3 \
