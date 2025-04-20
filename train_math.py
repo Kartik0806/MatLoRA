@@ -255,7 +255,7 @@ def train():
     data_args.data_length = int(remaining_args[1])
     is_matlora = remaining_args[-1]
 
-    wandb_run_name = "MatLoRA" if is_metalora else "LoRA"
+    wandb_run_name = "MatLoRA" if is_matlora else "LoRA"
     wandb.init(project="MetaMathQA", name=wandb_run_name)
     
     model = transformers.AutoModelForCausalLM.from_pretrained(
