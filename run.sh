@@ -1,7 +1,7 @@
 export MODEL_PATH='meta-llama/Llama-3.2-1B'
 export SAVE_PATH='.weights/'
-export WANDB_DISABLED=true
-wandb offline
+export WANDB_DISABLED=false
+wandb online
 
 wget https://huggingface.co/datasets/meta-math/MetaMathQA/resolve/main/MetaMathQA-395K.json -O ./data/MetaMathQA-395K.json
 
@@ -25,7 +25,7 @@ python3  train_math.py \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 True \
-    --is_metalora True
+    --is_matlora True
 
 python eval_gsm8k.py --model $SAVE_PATH --data_file ./data/test/GSM8K_test.jsonl
 python eval_math.py --model $SAVE_PATH --data_file ./data/test/MATH_test.jsonl
