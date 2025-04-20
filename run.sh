@@ -1,4 +1,4 @@
-export MODEL_PATH='meta-llama/Llama-3.2-1B'
+export MODEL_PATH='meta-llama/Llama-3.1-8B'
 export SAVE_PATH='.weights/'
 export WANDB_DISABLED=false
 wandb online
