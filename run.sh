@@ -12,7 +12,7 @@ python3  train_math.py \
     --data_length 100000 \
     --bf16 True \
     --output_dir $SAVE_PATH \
-    --num_train_epochs 3 \
+    --num_train_epochs 1 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \
