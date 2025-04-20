@@ -27,6 +27,7 @@ import argparse
 import json
 import random;random.seed(42)
 import argparse
+import wandb
 
 from lora_model import get_matlora, get_lora
 
@@ -253,6 +254,10 @@ def train():
     model_args, data_args, training_args, remaining_args = parser.parse_args_into_dataclasses(return_remaining_strings=True)
     data_args.data_length = int(remaining_args[1])
     is_matlora = remaining_args[-1]
+
+    wandb_run_name = "MatLoRA" if is_metalora else "LoRA"
+    wandb.init(project="MetaMathQA", name=wandb_run_name)
+    
     model = transformers.AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
